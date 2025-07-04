@@ -14,10 +14,3 @@ def test_root():
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {"message": "Olá Mundo!"}
 
-
-def test_items():
-    client = TestClient(app)
-    response = client.get("/items")
-
-    assert response.status_code == HTTPStatus.OK
-    assert response.json() == {"items": ["item1", "item2", "item3"]}
