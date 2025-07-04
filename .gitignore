@@ -1,11 +1,5 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
-.python-version
-wip.py
-wip.md
-slides/brutos/*.html
-*.db
-*.bd
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -130,6 +124,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+.env
 .venv
 env/
 venv/
@@ -181,3 +176,4 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 # Generated using ignr.py - github.com/Antrikshy/ignr.py
+
