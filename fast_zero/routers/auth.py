@@ -18,7 +18,7 @@ Session = Annotated[AsyncSession, Depends(get_session)]
 
 
 @router.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2Form, session: Session):
+async def login_for_access_token(form_data: OAuth2Form, session: Session):  # type: ignore
     user = await session.scalar(
         select(User).where(User.email == form_data.username)
     )
