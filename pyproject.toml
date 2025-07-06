@@ -30,6 +30,8 @@ taskipy = "^1.14.1"
 pytest-asyncio = "^1.0.0"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.41"}
 aiosqlite = "^0.21.0"
+factory-boy = "^3.3.3"
+freezegun = "^1.5.2"
 
 [tool.ruff]
 line-length = 79

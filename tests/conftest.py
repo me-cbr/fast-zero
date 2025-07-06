@@ -1,10 +1,7 @@
-from contextlib import contextmanager
-from datetime import datetime
-
+import factory
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
-from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.pool import StaticPool
 
@@ -12,6 +9,15 @@ from fast_zero.app import app
 from fast_zero.database import get_session
 from fast_zero.models import User, table_registry
 from fast_zero.security import get_password_hash
+
+
+class UserFactory(factory.Factory):
+    class Meta:
+        model = User
+
+    username = factory.Sequence(lambda n: f"test{n}")
+    email = factory.LazyAttribute(lambda obj: f"{obj.username}@test.com")
+    password = factory.LazyAttribute(lambda obj: f"{obj.username}@example.com")
 
 
 @pytest.fixture
@@ -46,11 +52,8 @@ async def session():
 @pytest_asyncio.fixture
 async def user(session):
     password = "testtest"
-    user = User(
-        username="Teste",
-        email="teste@test.com",
-        password=get_password_hash(password),
-    )
+    user = UserFactory(password=get_password_hash(password))
+
     session.add(user)
     await session.commit()
     await session.refresh(user)
@@ -60,24 +63,18 @@ async def user(session):
     return user
 
 
-@contextmanager
-def _mock_db_time(*, model, time=datetime(2025, 7, 4)):
-    def fake_time_hook(mapper, connection, target):
-        if hasattr(target, "created_at"):
-            target.creted_at = time
-        if hasattr(target, "updated_at"):
-            target.updated_at = time
+@pytest_asyncio.fixture
+async def other_user(session):
+    password = "testtest"
+    user = UserFactory(password=get_password_hash(password))
 
-    event.listen(model, "before_insert", fake_time_hook)
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
 
-    yield time
+    user.clean_password = password
 
-    event.remove(model, "before_insert", fake_time_hook)
-
-
-@pytest.fixture
-def mock_db_time():
-    return _mock_db_time
+    return user
 
 
 @pytest.fixture
