@@ -58,7 +58,7 @@ async def create_user(user: UserSchema, session: Session):  # type: ignore
 
 @router.get("/", response_model=UserList)
 async def read_users(
-    session: Session,
+    session: Session, # type: ignore
     filter_users: Annotated[FilterPage, Query()],  # type: ignore
 ):
     query = await session.scalars(
